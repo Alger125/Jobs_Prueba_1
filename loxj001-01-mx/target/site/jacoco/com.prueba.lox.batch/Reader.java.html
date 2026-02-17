@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Reader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">loxj001-01-mx</a> &gt; <a href="index.source.html" class="el_package">com.prueba.lox.batch</a> &gt; <span class="el_source">Reader.java</span></div><h1>Reader.java</h1><pre class="source lang-java linenums">package com.prueba.lox.batch;
+
+import org.springframework.batch.item.ItemReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+<span class="fc" id="L9">public class Reader implements ItemReader&lt;List&lt;Map&lt;String, Object&gt;&gt;&gt; {</span>
+
+<span class="fc" id="L11">    private boolean isRead = false; // Bandera para que solo lea una vez</span>
+
+    @Override
+    public List&lt;Map&lt;String, Object&gt;&gt; read() throws Exception {
+        // Si ya leímos los datos, devolvemos null para que el Job termine
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        if (isRead) {</span>
+<span class="fc" id="L17">            return null;</span>
+        }
+
+        // --- SIMULACIÓN DE DATOS (Aquí evitamos el NullPointerException) ---
+<span class="fc" id="L21">        List&lt;Map&lt;String, Object&gt;&gt; listaContratos = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L23">        Map&lt;String, Object&gt; contrato1 = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L24">        contrato1.put(&quot;CONTRATO_ID&quot;, &quot;987654321&quot;);</span>
+<span class="fc" id="L25">        contrato1.put(&quot;ESTADO&quot;, &quot;ACTIVO&quot;);</span>
+<span class="fc" id="L26">        contrato1.put(&quot;IMPORTE&quot;, &quot;1500.50&quot;);</span>
+
+<span class="fc" id="L28">        listaContratos.add(contrato1);</span>
+
+<span class="fc" id="L30">        isRead = true; // Marcamos que ya enviamos la lista</span>
+<span class="fc" id="L31">        System.out.println(&quot;&gt;&gt;&gt; READER: Enviando lista con &quot; + listaContratos.size() + &quot; contrato(s)&quot;);</span>
+
+<span class="fc" id="L33">        return listaContratos;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

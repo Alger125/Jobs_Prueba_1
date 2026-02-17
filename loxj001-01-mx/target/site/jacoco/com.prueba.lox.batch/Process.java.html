@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Process.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">loxj001-01-mx</a> &gt; <a href="index.source.html" class="el_package">com.prueba.lox.batch</a> &gt; <span class="el_source">Process.java</span></div><h1>Process.java</h1><pre class="source lang-java linenums">package com.prueba.lox.batch;
+
+import com.prueba.lox.batch.Utility.Utility;
+import com.prueba.lox.batch.model_1.MovimientoDTO;
+import org.springframework.batch.item.ItemProcessor;
+import java.util.Map;
+
+/**
+ * Processor enfocado en la orquestación de la lógica de negocio.
+ */
+<span class="fc" id="L11">public class Process extends Utility implements ItemProcessor&lt;MovimientoDTO, String&gt; {</span>
+
+<span class="fc" id="L13">    private Integer count = 0;</span>
+
+    @Override
+    public String process(MovimientoDTO item) throws Exception {
+        // 1. El Reader ya nos dio el 'item' con los datos de la 1er consulta (Nombre, Cuenta, Monto).
+
+        // 2. Delegamos a la librería.
+        // Dentro de 'executeCreateCreditContract', la librería llamará a 'consultarDetalleSaldo'
+        // usando el número de cuenta que ya viene en el DTO.
+<span class="fc" id="L22">        Map&lt;String, Object&gt; event = this.getMapEvent(&quot;PROCESS&quot;, item);</span>
+<span class="fc" id="L23">        this.getLoxR174().executeCreateCreditContract(event);</span>
+
+        // 3. Lógica de filtrado (Opcional)
+        // Si después de la 2da consulta la librería decide que no es apto,
+        // podrías retornar null para que el Writer no escriba esta línea.
+        // if (item.getSaldoDisponible() &lt;= 0) return null;
+
+<span class="fc" id="L30">        count++;</span>
+
+        // 4. Transformamos el DTO ya enriquecido a la cadena de texto final para el TXT.
+<span class="fc" id="L33">        return this.complementDataContracts(item);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PimientosMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">loxc001</a> &gt; <a href="index.source.html" class="el_package">com.prueba.lox.batch.mapper</a> &gt; <span class="el_source">PimientosMapper.java</span></div><h1>PimientosMapper.java</h1><pre class="source lang-java linenums">package com.prueba.lox.batch.mapper;
+
+import com.prueba.lox.batch.model_1.MovimientoDTO;
+import org.springframework.jdbc.core.RowMapper;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+<span class="fc" id="L8">public class PimientosMapper implements RowMapper&lt;MovimientoDTO&gt; {</span>
+    @Override
+    public MovimientoDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+<span class="fc" id="L11">        MovimientoDTO dto = new MovimientoDTO();</span>
+<span class="fc" id="L12">        dto.setNombre(rs.getString(&quot;NOMBRE&quot;));</span>
+<span class="fc" id="L13">        dto.setNumeroCuenta(rs.getString(&quot;NUMERO_CUENTA&quot;));</span>
+<span class="fc" id="L14">        dto.setMonto(rs.getDouble(&quot;MONTO&quot;));</span>
+<span class="fc" id="L15">        return dto;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,6 @@
+com\prueba\lox\batch\ProcessTest.class
+com\prueba\lox\batch\Utility\UtilityTest.class
+com\prueba\lox\batch\CompleteTest.class
+com\prueba\lox\batch\LoxJobTestManual.class
+com\prueba\lox\batch\FailedTest.class
+com\prueba\lox\batch\ReaderTest.class

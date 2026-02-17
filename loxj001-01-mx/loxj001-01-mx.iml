@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$" dumb="true">
+      <sourceFolder url="file://$MODULE_DIR$/artifact/jobs/LOXJ162-01-MX/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/artifact/jobs/LOXJ162-01-MX/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/artifact/jobs/LOXJ162-01-MX/src/main/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/artifact/jobs/LOXJ162-01-MX/src/test/java" isTestSource="true" />
+    </content>
+  </component>
+</module>

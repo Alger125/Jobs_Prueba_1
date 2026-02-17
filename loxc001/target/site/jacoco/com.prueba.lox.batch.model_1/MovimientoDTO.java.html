@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MovimientoDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">loxc001</a> &gt; <a href="index.source.html" class="el_package">com.prueba.lox.batch.model_1</a> &gt; <span class="el_source">MovimientoDTO.java</span></div><h1>MovimientoDTO.java</h1><pre class="source lang-java linenums">package com.prueba.lox.batch.model_1;
+
+public class MovimientoDTO {
+    private String nombre;
+    private String numeroCuenta;
+    private Double monto;
+    private String estatus; // &lt;--- 1. Agregamos la variable
+
+<span class="fc" id="L9">    public MovimientoDTO() {}</span>
+
+    // Getters y Setters previos...
+<span class="fc" id="L12">    public String getNombre() { return nombre; }</span>
+<span class="fc" id="L13">    public void setNombre(String nombre) { this.nombre = nombre; }</span>
+<span class="fc" id="L14">    public String getNumeroCuenta() { return numeroCuenta; }</span>
+<span class="fc" id="L15">    public void setNumeroCuenta(String numeroCuenta) { this.numeroCuenta = numeroCuenta; }</span>
+<span class="fc" id="L16">    public Double getMonto() { return monto; }</span>
+<span class="fc" id="L17">    public void setMonto(Double monto) { this.monto = monto; }</span>
+
+    // --- 2. AGREGAR ESTOS MÉTODOS (Crucial para que la Impl no truene) ---
+    public String getEstatus() {
+<span class="fc" id="L21">        return estatus;</span>
+    }
+
+    public void setEstatus(String estatus) {
+<span class="fc" id="L25">        this.estatus = estatus;</span>
+<span class="fc" id="L26">    }</span>
+
+    // 3. Recomendado para ver el resultado en el archivo .txt
+    @Override
+    public String toString() {
+<span class="fc" id="L31">        return nombre + &quot;,&quot; + numeroCuenta + &quot;,&quot; + monto + &quot;,&quot; + estatus;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
