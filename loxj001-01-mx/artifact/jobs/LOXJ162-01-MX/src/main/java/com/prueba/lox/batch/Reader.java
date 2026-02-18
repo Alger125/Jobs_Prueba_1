@@ -8,28 +8,44 @@ import java.util.HashMap;
 
 public class Reader implements ItemReader<List<Map<String, Object>>> {
 
-    private boolean isRead = false; // Bandera para que solo lea una vez
+    // Cambiamos la bandera por un índice para saber dónde vamos
+    private int indiceActual = 0;
+    private final int TAMANO_PAGINA = 100;
+    private final int TOTAL_REGISTROS = 1000; // Simulemos que hay 1000 registros en total
 
     @Override
     public List<Map<String, Object>> read() throws Exception {
-        // Si ya leímos los datos, devolvemos null para que el Job termine
-        if (isRead) {
+
+        // 1. CONDICIÓN DE PARADA
+        // Si nuestro índice llegó al total, devolvemos null para terminar el Job
+        if (indiceActual >= TOTAL_REGISTROS) {
+            System.out.println(">>> READER: Se han procesado todos los registros. Finalizando...");
             return null;
         }
 
-        // --- SIMULACIÓN DE DATOS (Aquí evitamos el NullPointerException) ---
-        List<Map<String, Object>> listaContratos = new ArrayList<>();
+        // 2. CREACIÓN DE LA PÁGINA (BLOQUE)
+        List<Map<String, Object>> pagina = new ArrayList<>();
 
-        Map<String, Object> contrato1 = new HashMap<>();
-        contrato1.put("CONTRATO_ID", "987654321");
-        contrato1.put("ESTADO", "ACTIVO");
-        contrato1.put("IMPORTE", "1500.50");
+        // Llenamos la página con 100 elementos
+        for (int i = 0; i < TAMANO_PAGINA && (indiceActual + i) < TOTAL_REGISTROS; i++) {
+            Map<String, Object> contrato = new HashMap<>();
 
-        listaContratos.add(contrato1);
+            // Datos simulados dinámicos basándonos en el índice
+            int idSimulado = indiceActual + i + 1;
+            contrato.put("CONTRATO_ID", "CONT-" + idSimulado);
+            contrato.put("ESTADO", "ACTIVO");
+            contrato.put("IMPORTE", 1000.0 + idSimulado);
 
-        isRead = true; // Marcamos que ya enviamos la lista
-        System.out.println(">>> READER: Enviando lista con " + listaContratos.size() + " contrato(s)");
+            pagina.add(contrato);
+        }
 
-        return listaContratos;
+        // 3. ACTUALIZAR EL PUNTERO
+        // Avisamos que la próxima vez que entre, empiece 100 registros después
+        System.out.println(">>> READER: Enviando bloque desde registro " + (indiceActual + 1) +
+                " hasta " + (indiceActual + pagina.size()));
+
+        indiceActual += TAMANO_PAGINA;
+
+        return pagina;
     }
 }

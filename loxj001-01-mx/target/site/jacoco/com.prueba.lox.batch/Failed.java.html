@@ -10,11 +10,34 @@ import org.springframework.batch.repeat.RepeatStatus;
 
     @Override
     public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
-        // Usamos el servicio LOX y un mensaje limpio de copyright
-<span class="fc" id="L14">        this.getLoxR174().executeCreateCreditContract(</span>
-<span class="fc" id="L15">                this.getMapEvent(&quot;KO&quot;, &quot;Fallo la ejecucion del JOB LOX Local&quot;)</span>
+
+        // 1. Extraemos el mensaje de error que detuvo el Job
+<span class="fc" id="L15">        String causaError = extraerMensajeDeError(chunkContext);</span>
+
+        // 2. Notificamos a la librería con información detallada
+<span class="fc" id="L18">        this.getLoxR174().executeCreateCreditContract(</span>
+<span class="fc" id="L19">                this.getMapEvent(&quot;KO&quot;, &quot;JOB_FAILED: &quot; + causaError)</span>
         );
-<span class="fc" id="L17">        return RepeatStatus.FINISHED;</span>
+
+<span class="fc" id="L22">        System.err.println(&quot;&gt;&gt;&gt; ALERTA: El Job falló. Motivo: &quot; + causaError);</span>
+
+<span class="fc" id="L24">        return RepeatStatus.FINISHED;</span>
+    }
+
+    /**
+     * Intenta obtener la excepción que causó el fallo desde el contexto de ejecución.
+     */
+    private String extraerMensajeDeError(ChunkContext chunkContext) {
+        try {
+            // Spring Batch guarda las excepciones en el StepContext
+<span class="fc" id="L33">            Object exception = chunkContext.getStepContext()</span>
+<span class="fc" id="L34">                    .getStepExecution()</span>
+<span class="fc" id="L35">                    .getJobExecution()</span>
+<span class="fc" id="L36">                    .getAllFailureExceptions();</span>
+<span class="fc" id="L37">            return exception.toString();</span>
+<span class="fc" id="L38">        } catch (Exception e) {</span>
+<span class="fc" id="L39">            return &quot;Error desconocido en la ejecución del Job&quot;;</span>
+        }
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -2,6 +2,8 @@ package com.prueba.lox.batch;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,17 +19,25 @@ public class ReaderTest {
     }
 
     @Test
-    public void read_shouldReturnListOnFirstCallAndNullOnSecondCall() throws Exception {
-        // 1. Primera llamada: Debe devolver la lista simulada
+    public void read_shouldReturnListOnFirstCallAndNullOnlyAfterTotal() throws Exception {
+        // 1. Primera llamada: Debe devolver el primer bloque de 100
         List<Map<String, Object>> firstResult = reader.read();
 
         assertNotNull("La primera lectura no debe ser nula", firstResult);
-        assertEquals("La lista debe tener 1 contrato", 1, firstResult.size());
-        assertEquals("El ID del contrato debe coincidir", "987654321", firstResult.get(0).get("CONTRATO_ID"));
+        assertEquals("El primer bloque debe tener 100 contratos", 100, firstResult.size());
 
-        // 2. Segunda llamada: La bandera 'isRead' ya es true, debe devolver null
+        // CORRECCIÓN: El ID ahora sigue el formato "CONT-1" (según el nuevo Reader)
+        assertEquals("El ID del primer contrato debe ser CONT-1", "CONT-1", firstResult.get(0).get("CONTRATO_ID"));
+
+        // 2. Verificamos la progresión (Segunda llamada)
         List<Map<String, Object>> secondResult = reader.read();
+        assertNotNull("La segunda lectura debe traer el siguiente bloque", secondResult);
+        assertEquals("El ID del primer contrato del segundo bloque debe ser CONT-101", "CONT-101", secondResult.get(0).get("CONTRATO_ID"));
 
-        assertNull("La segunda lectura debe devolver null para finalizar el Step", secondResult);
+        // 3. Simulamos que llegamos al final (opcional, para probar el null)
+        // Para probar el null rápidamente, podrías usar Reflection para mover el índiceActual al final
+        ReflectionTestUtils.setField(reader, "indiceActual", 1000);
+        List<Map<String, Object>> finalResult = reader.read();
+        assertNull("Después de 1000 registros, debe devolver null", finalResult);
     }
 }

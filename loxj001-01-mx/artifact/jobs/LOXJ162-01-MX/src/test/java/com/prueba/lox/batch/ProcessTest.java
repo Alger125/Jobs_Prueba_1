@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,34 +27,28 @@ public class ProcessTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        // Aseguramos que el contador inicie en 0 antes de cada test
-        ReflectionTestUtils.setField(process, "count", 0);
+        // Inicializamos el contador en 0
+        ReflectionTestUtils.setField(process, "totalProcesados", 0);
     }
 
     @Test
-    public void process_shouldInvokeLibraryAndReturnFormattedString() throws Exception {
-        // 1. Arrange
-        MovimientoDTO item = new MovimientoDTO();
-        item.setNombre("Juan Perez");
-        item.setNumeroCuenta("12345678");
-        item.setMonto(500.0);
+    public void process_shouldInvokeLibraryForSingleItem() throws Exception {
+        // 1. Arrange: Preparamos UN solo DTO (que es lo que el Processor recibe ahora)
+        MovimientoDTO contrato = new MovimientoDTO();
+        contrato.setNumeroCuenta("987654321");
 
-        // Como Process hereda de Utility, necesitamos que getLoxR174() no sea null
-        // Si Utility inyecta por setter:
-        // process.setLoxR174(loxR174);
-
-        // 2. Act
-        String result = process.process(item);
+        // 2. Act: Llamamos al método process con un solo objeto
+        String result = process.process(contrato);
 
         // 3. Assert
-        // Verificamos que se llamó a la librería con el evento "PROCESS"
+        // Verificamos que la librería LOX se llamó exactamente 1 vez
         verify(loxR174, times(1)).executeCreateCreditContract(anyMap());
 
-        // Verificamos que el contador subió a 1
-        Integer currentCount = (Integer) ReflectionTestUtils.getField(process, "count");
-        assertEquals("El contador debería haber incrementado", Integer.valueOf(1), currentCount);
+        // Verificamos que el contador interno subió a 1
+        Integer currentCount = (Integer) ReflectionTestUtils.getField(process, "totalProcesados");
+        assertEquals("Debería haber procesado 1 contrato", Integer.valueOf(1), currentCount);
 
-        // Verificamos que devolvió algo (asumiendo que complementDataContracts funciona)
-        assertNotNull("El resultado del procesamiento no debe ser null", result);
+        // Verificamos que el resultado no sea nulo y contenga datos
+        assertNotNull("El String resultante no debe ser nulo", result);
     }
 }

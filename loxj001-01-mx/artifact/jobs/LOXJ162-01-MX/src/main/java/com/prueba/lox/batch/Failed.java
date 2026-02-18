@@ -10,10 +10,33 @@ public class Failed extends Utility implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
-        // Usamos el servicio LOX y un mensaje limpio de copyright
+
+        // 1. Extraemos el mensaje de error que detuvo el Job
+        String causaError = extraerMensajeDeError(chunkContext);
+
+        // 2. Notificamos a la librería con información detallada
         this.getLoxR174().executeCreateCreditContract(
-                this.getMapEvent("KO", "Fallo la ejecucion del JOB LOX Local")
+                this.getMapEvent("KO", "JOB_FAILED: " + causaError)
         );
+
+        System.err.println(">>> ALERTA: El Job falló. Motivo: " + causaError);
+
         return RepeatStatus.FINISHED;
+    }
+
+    /**
+     * Intenta obtener la excepción que causó el fallo desde el contexto de ejecución.
+     */
+    private String extraerMensajeDeError(ChunkContext chunkContext) {
+        try {
+            // Spring Batch guarda las excepciones en el StepContext
+            Object exception = chunkContext.getStepContext()
+                    .getStepExecution()
+                    .getJobExecution()
+                    .getAllFailureExceptions();
+            return exception.toString();
+        } catch (Exception e) {
+            return "Error desconocido en la ejecución del Job";
+        }
     }
 }
