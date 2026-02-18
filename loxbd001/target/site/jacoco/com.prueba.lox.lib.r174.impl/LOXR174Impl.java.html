@@ -15,59 +15,60 @@ import java.util.HashMap;
 
     @Override
     public void executeCreateCreditContract(Map&lt;String, Object&gt; event) {
-<span class="fc bfc" id="L18" title="All 4 branches covered.">        if (event == null || !EVENT_STATUS_PROCESS.equals(event.get(&quot;status&quot;))) {</span>
-<span class="fc" id="L19">            return;</span>
+        // 1. Cambia &quot;status&quot; por &quot;STATUS&quot; para que coincida con Utility
+<span class="pc bpc" id="L19" title="1 of 4 branches missed.">        if (event == null || !EVENT_STATUS_PROCESS.equals(event.get(&quot;STATUS&quot;))) {</span>
+<span class="fc" id="L20">            return;</span>
         }
 
-<span class="fc" id="L22">        MovimientoDTO item = (MovimientoDTO) event.get(&quot;item&quot;);</span>
-<span class="fc bfc" id="L23" title="All 2 branches covered.">        if (item == null) {</span>
-            // SLF4J usa {} para parametrise, es mucho más eficiente
-<span class="fc" id="L25">            return;</span>
+        // 2. Extraemos el item (aquí sí está bien &quot;item&quot; porque así lo pusiste en Utility)
+<span class="fc" id="L24">        MovimientoDTO item = (MovimientoDTO) event.get(&quot;item&quot;);</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        if (item == null) {</span>
+<span class="fc" id="L26">            return;</span>
         }
 
-<span class="fc" id="L28">        processContractLogic(item);</span>
-<span class="fc" id="L29">    }</span>
+<span class="fc" id="L29">        processContractLogic(item);</span>
+<span class="fc" id="L30">    }</span>
 
     private void processContractLogic(MovimientoDTO item) {
-<span class="fc" id="L32">        HashMap&lt;String, Object&gt; infoSaldo = this.consultarDetalleSaldo(item.getNumeroCuenta());</span>
-<span class="fc" id="L33">        double saldoDisponible = extractSaldo(infoSaldo);</span>
+<span class="fc" id="L33">        HashMap&lt;String, Object&gt; infoSaldo = this.consultarDetalleSaldo(item.getNumeroCuenta());</span>
+<span class="fc" id="L34">        double saldoDisponible = extractSaldo(infoSaldo);</span>
 
-<span class="fc" id="L35">    }</span>
+<span class="fc" id="L36">    }</span>
 
     @Override
     @SuppressWarnings(&quot;unchecked&quot;)
     public HashMap&lt;String, Object&gt; consultarDetalleSaldo(String numeroCuenta) {
         try {
             // Asegúrate que tu Enum tenga el método getDescription() y no getKey()
-<span class="fc" id="L42">            String queryKey = VariablesSQL.SELECT_DETALLE_SALDOS.getDescription();</span>
+<span class="fc" id="L43">            String queryKey = VariablesSQL.SELECT_DETALLE_SALDOS.getDescription();</span>
 
 
-<span class="fc" id="L45">            Map&lt;String, Object&gt; resultado = jdbcTemplate.queryForMap(this.sqlDetalleSaldos, new Object[]{numeroCuenta});</span>
+<span class="fc" id="L46">            Map&lt;String, Object&gt; resultado = jdbcTemplate.queryForMap(this.sqlDetalleSaldos, new Object[]{numeroCuenta});</span>
 
-<span class="pc bpc" id="L47" title="1 of 2 branches missed.">            return (resultado != null) ? new HashMap&lt;&gt;(resultado) : new HashMap&lt;&gt;();</span>
-<span class="fc" id="L48">        } catch (Exception e) {</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">            return (resultado != null) ? new HashMap&lt;&gt;(resultado) : new HashMap&lt;&gt;();</span>
+<span class="nc" id="L49">        } catch (Exception e) {</span>
 
-<span class="fc" id="L50">            return new HashMap&lt;&gt;();</span>
+<span class="nc" id="L51">            return new HashMap&lt;&gt;();</span>
         }
     }
 
     protected  double extractSaldo(Map&lt;String, Object&gt; infoSaldo) {
 
         // Caso 1: mapa nulo o sin la clave esperada
-<span class="fc bfc" id="L57" title="All 4 branches covered.">        if (infoSaldo == null || !infoSaldo.containsKey(&quot;SALDO_DISPONIBLE&quot;)) {</span>
-<span class="fc" id="L58">            return 0.0;</span>
+<span class="fc bfc" id="L58" title="All 4 branches covered.">        if (infoSaldo == null || !infoSaldo.containsKey(&quot;SALDO_DISPONIBLE&quot;)) {</span>
+<span class="fc" id="L59">            return 0.0;</span>
         }
 
         // Caso 2: obtenemos el valor del saldo
-<span class="fc" id="L62">        Object saldo = infoSaldo.get(&quot;SALDO_DISPONIBLE&quot;);</span>
+<span class="fc" id="L63">        Object saldo = infoSaldo.get(&quot;SALDO_DISPONIBLE&quot;);</span>
 
         // Caso 3: validamos que sea numérico
-<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (saldo instanceof Number) {</span>
-<span class="fc" id="L66">            return ((Number) saldo).doubleValue();</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">        if (saldo instanceof Number) {</span>
+<span class="fc" id="L67">            return ((Number) saldo).doubleValue();</span>
         }
 
         // Caso 4: cualquier otro tipo no válido
-<span class="fc" id="L70">        return 0.0;</span>
+<span class="nc" id="L71">        return 0.0;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

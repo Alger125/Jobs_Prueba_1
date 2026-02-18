@@ -15,13 +15,14 @@ public class LOXR174Impl extends LOXR174Abstract {
 
     @Override
     public void executeCreateCreditContract(Map<String, Object> event) {
-        if (event == null || !EVENT_STATUS_PROCESS.equals(event.get("status"))) {
+        // 1. Cambia "status" por "STATUS" para que coincida con Utility
+        if (event == null || !EVENT_STATUS_PROCESS.equals(event.get("STATUS"))) {
             return;
         }
 
+        // 2. Extraemos el item (aquí sí está bien "item" porque así lo pusiste en Utility)
         MovimientoDTO item = (MovimientoDTO) event.get("item");
         if (item == null) {
-            // SLF4J usa {} para parametrise, es mucho más eficiente
             return;
         }
 

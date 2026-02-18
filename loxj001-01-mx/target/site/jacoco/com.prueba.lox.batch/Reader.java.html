@@ -8,29 +8,45 @@ import java.util.HashMap;
 
 <span class="fc" id="L9">public class Reader implements ItemReader&lt;List&lt;Map&lt;String, Object&gt;&gt;&gt; {</span>
 
-<span class="fc" id="L11">    private boolean isRead = false; // Bandera para que solo lea una vez</span>
+    // Cambiamos la bandera por un índice para saber dónde vamos
+<span class="fc" id="L12">    private int indiceActual = 0;</span>
+<span class="fc" id="L13">    private final int TAMANO_PAGINA = 100;</span>
+<span class="fc" id="L14">    private final int TOTAL_REGISTROS = 1000; // Simulemos que hay 1000 registros en total</span>
 
     @Override
     public List&lt;Map&lt;String, Object&gt;&gt; read() throws Exception {
-        // Si ya leímos los datos, devolvemos null para que el Job termine
-<span class="fc bfc" id="L16" title="All 2 branches covered.">        if (isRead) {</span>
-<span class="fc" id="L17">            return null;</span>
+
+        // 1. CONDICIÓN DE PARADA
+        // Si nuestro índice llegó al total, devolvemos null para terminar el Job
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (indiceActual &gt;= TOTAL_REGISTROS) {</span>
+<span class="fc" id="L22">            System.out.println(&quot;&gt;&gt;&gt; READER: Se han procesado todos los registros. Finalizando...&quot;);</span>
+<span class="fc" id="L23">            return null;</span>
         }
 
-        // --- SIMULACIÓN DE DATOS (Aquí evitamos el NullPointerException) ---
-<span class="fc" id="L21">        List&lt;Map&lt;String, Object&gt;&gt; listaContratos = new ArrayList&lt;&gt;();</span>
+        // 2. CREACIÓN DE LA PÁGINA (BLOQUE)
+<span class="fc" id="L27">        List&lt;Map&lt;String, Object&gt;&gt; pagina = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L23">        Map&lt;String, Object&gt; contrato1 = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L24">        contrato1.put(&quot;CONTRATO_ID&quot;, &quot;987654321&quot;);</span>
-<span class="fc" id="L25">        contrato1.put(&quot;ESTADO&quot;, &quot;ACTIVO&quot;);</span>
-<span class="fc" id="L26">        contrato1.put(&quot;IMPORTE&quot;, &quot;1500.50&quot;);</span>
+        // Llenamos la página con 100 elementos
+<span class="pc bpc" id="L30" title="1 of 4 branches missed.">        for (int i = 0; i &lt; TAMANO_PAGINA &amp;&amp; (indiceActual + i) &lt; TOTAL_REGISTROS; i++) {</span>
+<span class="fc" id="L31">            Map&lt;String, Object&gt; contrato = new HashMap&lt;&gt;();</span>
 
-<span class="fc" id="L28">        listaContratos.add(contrato1);</span>
+            // Datos simulados dinámicos basándonos en el índice
+<span class="fc" id="L34">            int idSimulado = indiceActual + i + 1;</span>
+<span class="fc" id="L35">            contrato.put(&quot;CONTRATO_ID&quot;, &quot;CONT-&quot; + idSimulado);</span>
+<span class="fc" id="L36">            contrato.put(&quot;ESTADO&quot;, &quot;ACTIVO&quot;);</span>
+<span class="fc" id="L37">            contrato.put(&quot;IMPORTE&quot;, 1000.0 + idSimulado);</span>
 
-<span class="fc" id="L30">        isRead = true; // Marcamos que ya enviamos la lista</span>
-<span class="fc" id="L31">        System.out.println(&quot;&gt;&gt;&gt; READER: Enviando lista con &quot; + listaContratos.size() + &quot; contrato(s)&quot;);</span>
+<span class="fc" id="L39">            pagina.add(contrato);</span>
+        }
 
-<span class="fc" id="L33">        return listaContratos;</span>
+        // 3. ACTUALIZAR EL PUNTERO
+        // Avisamos que la próxima vez que entre, empiece 100 registros después
+<span class="fc" id="L44">        System.out.println(&quot;&gt;&gt;&gt; READER: Enviando bloque desde registro &quot; + (indiceActual + 1) +</span>
+<span class="fc" id="L45">                &quot; hasta &quot; + (indiceActual + pagina.size()));</span>
+
+<span class="fc" id="L47">        indiceActual += TAMANO_PAGINA;</span>
+
+<span class="fc" id="L49">        return pagina;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

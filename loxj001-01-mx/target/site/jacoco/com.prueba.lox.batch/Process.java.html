@@ -5,32 +5,24 @@ import com.prueba.lox.batch.model_1.MovimientoDTO;
 import org.springframework.batch.item.ItemProcessor;
 import java.util.Map;
 
-/**
- * Processor enfocado en la orquestación de la lógica de negocio.
- */
-<span class="fc" id="L11">public class Process extends Utility implements ItemProcessor&lt;MovimientoDTO, String&gt; {</span>
+<span class="fc" id="L8">public class Process extends Utility implements ItemProcessor&lt;MovimientoDTO, String&gt; {</span>
 
-<span class="fc" id="L13">    private Integer count = 0;</span>
+<span class="fc" id="L10">    private int totalProcesados = 0;</span>
 
     @Override
     public String process(MovimientoDTO item) throws Exception {
-        // 1. El Reader ya nos dio el 'item' con los datos de la 1er consulta (Nombre, Cuenta, Monto).
+        // Lógica de librería
+<span class="fc" id="L15">        Map&lt;String, Object&gt; event = this.getMapEvent(&quot;PROCESS&quot;, item);</span>
+<span class="fc" id="L16">        this.getLoxR174().executeCreateCreditContract(event);</span>
 
-        // 2. Delegamos a la librería.
-        // Dentro de 'executeCreateCreditContract', la librería llamará a 'consultarDetalleSaldo'
-        // usando el número de cuenta que ya viene en el DTO.
-<span class="fc" id="L22">        Map&lt;String, Object&gt; event = this.getMapEvent(&quot;PROCESS&quot;, item);</span>
-<span class="fc" id="L23">        this.getLoxR174().executeCreateCreditContract(event);</span>
+<span class="fc" id="L18">        totalProcesados++;</span>
 
-        // 3. Lógica de filtrado (Opcional)
-        // Si después de la 2da consulta la librería decide que no es apto,
-        // podrías retornar null para que el Writer no escriba esta línea.
-        // if (item.getSaldoDisponible() &lt;= 0) return null;
+        // CADA 1000 REGISTROS imprimimos en consola para ver el progreso
+<span class="pc bpc" id="L21" title="1 of 2 branches missed.">        if (totalProcesados % 1000 == 0) {</span>
+<span class="nc" id="L22">            System.out.println(&quot;&gt;&gt;&gt; PROGRESO: Se han procesado &quot; + totalProcesados + &quot; registros...&quot;);</span>
+        }
 
-<span class="fc" id="L30">        count++;</span>
-
-        // 4. Transformamos el DTO ya enriquecido a la cadena de texto final para el TXT.
-<span class="fc" id="L33">        return this.complementDataContracts(item);</span>
+<span class="fc" id="L25">        return this.complementDataContracts(item) + &quot;\n&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
